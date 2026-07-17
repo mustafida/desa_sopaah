@@ -17,6 +17,9 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </svelte:head>
 
+{#if $page.url.pathname.startsWith('/admin')}
+	{@render children()}
+{:else}
 <div class="flex flex-col min-h-screen font-['Inter']">
 	<!-- Navbar -->
 	<nav class="bg-green-600 text-white shadow-md fixed w-full z-50">
@@ -24,8 +27,12 @@
 			<div class="flex justify-between items-center h-20">
 				<!-- Logo / Brand -->
 				<a href="/" class="flex items-center gap-3 group">
-					<!-- Pastikan gambar logo disimpan di static/img/logo.png -->
-					<img src="/img/logo.png" alt="Logo" class="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+					<div class="flex items-center gap-2">
+						<!-- Logo Desa -->
+						<img src="/img/logo.png" alt="Logo Desa Sopaah" class="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+						<!-- Logo KKN -->
+						<img src="/img/logo-kkn.png" alt="Logo KKN Kelompok 14" class="h-16 w-auto object-contain transition-transform group-hover:scale-105 -ml-1.5" />
+					</div>
 					<div class="flex flex-col">
 						<span class="text-xl font-bold tracking-tight text-white leading-tight">
 							Desa Sopaah
@@ -40,6 +47,7 @@
 				<div class="hidden md:flex space-x-6 lg:space-x-8 items-center font-bold text-sm lg:text-base">
 					<a href="/" class="transition-colors {$page.url.pathname === '/' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Beranda</a>
 					<a href="/profil" class="transition-colors {$page.url.pathname === '/profil' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Profil Desa</a>
+					<a href="/data-desa" class="transition-colors {$page.url.pathname === '/data-desa' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Data Desa</a>
 					
 					<!-- Lembaga Dropdown -->
 					<div class="relative group py-2">
@@ -49,8 +57,9 @@
 						<!-- Hover Bridge Container -->
 						<div class="absolute left-0 top-full pt-1 w-48 hidden group-hover:block">
 							<div class="bg-white rounded-md shadow-lg py-2 border border-gray-100 text-gray-700 font-medium">
-								<a href="/lembaga/karang-taruna" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">Karang Taruna</a>
+
 								<a href="/lembaga/pkk" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">PKK</a>
+								<a href="/lembaga/tk-pkk" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">TK PKK</a>
 							</div>
 						</div>
 					</div>
@@ -64,12 +73,10 @@
 						<div class="absolute left-0 top-full pt-1 w-48 hidden group-hover:block">
 							<div class="bg-white rounded-md shadow-lg py-2 border border-gray-100 text-gray-700 font-medium">
 								<a href="/informasi/berita" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">Berita & Pengumuman</a>
-								<a href="/informasi/galeri" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">Galeri</a>
+								<a href="/informasi/umkm" class="block px-4 py-2 hover:bg-green-50 hover:text-green-700">UMKM</a>
 							</div>
 						</div>
 					</div>
-
-					<a href="/data-desa" class="transition-colors {$page.url.pathname === '/data-desa' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Data Desa</a>
 					
 					<a href="/layanan-surat" class="px-5 py-2 bg-white text-green-700 hover:bg-green-50 rounded-full transition-all shadow-sm hover:shadow-md text-sm font-bold transform hover:-translate-y-0.5">Layanan Surat</a>
 				</div>
@@ -91,22 +98,22 @@
 				<ul class="flex flex-col px-4 pt-2 pb-6 space-y-3 font-bold">
 					<li><a href="/" class="block py-2 transition-colors {$page.url.pathname === '/' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Beranda</a></li>
 					<li><a href="/profil" class="block py-2 transition-colors {$page.url.pathname === '/profil' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Profil Desa</a></li>
+					<li><a href="/data-desa" class="block py-2 transition-colors {$page.url.pathname === '/data-desa' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Data Desa</a></li>
 					
 					<li><div class="py-2 text-white">Lembaga</div>
 						<ul class="pl-4 space-y-2 font-medium text-sm text-green-100">
-							<li><a href="/lembaga/karang-taruna" class="block py-1 hover:text-white">Karang Taruna</a></li>
+
 							<li><a href="/lembaga/pkk" class="block py-1 hover:text-white">PKK</a></li>
+							<li><a href="/lembaga/tk-pkk" class="block py-1 hover:text-white">TK PKK</a></li>
 						</ul>
 					</li>
 
 					<li><div class="py-2 text-white">Informasi</div>
 						<ul class="pl-4 space-y-2 font-medium text-sm text-green-100">
 							<li><a href="/informasi/berita" class="block py-1 hover:text-white">Berita & Pengumuman</a></li>
-							<li><a href="/informasi/galeri" class="block py-1 hover:text-white">Galeri</a></li>
+							<li><a href="/informasi/umkm" class="block py-1 hover:text-white">UMKM</a></li>
 						</ul>
 					</li>
-
-					<li><a href="/data-desa" class="block py-2 transition-colors {$page.url.pathname === '/data-desa' ? 'text-white underline underline-offset-4 decoration-2' : 'text-green-100 hover:text-white'}">Data Desa</a></li>
 					
 					<li><a href="/layanan-surat" class="block py-3 mt-2 bg-white text-green-700 text-center rounded-md hover:bg-green-50 transition-colors">Layanan Surat</a></li>
 				</ul>
@@ -126,3 +133,4 @@
 		</div>
 	</footer>
 </div>
+{/if}

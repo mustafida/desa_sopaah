@@ -1,3 +1,10 @@
+<script lang="ts">
+	let { data } = $props();
+
+	const blueColors = ['bg-blue-500', 'bg-blue-400', 'bg-blue-300', 'bg-blue-200', 'bg-blue-100'];
+	const greenColors = ['bg-green-500', 'bg-green-400', 'bg-green-300', 'bg-green-200', 'bg-green-100'];
+</script>
+
 <svelte:head>
 	<title>Data Desa - Desa Sopaah</title>
 </svelte:head>
@@ -19,7 +26,7 @@
 				<div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
 					<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
 				</div>
-				<h3 class="text-3xl font-bold text-gray-800 mb-1">2.450</h3>
+				<h3 class="text-3xl font-bold text-gray-800 mb-1">{data.kependudukan.totalJiwa.toLocaleString('id-ID')}</h3>
 				<p class="text-gray-500 font-medium">Total Jiwa</p>
 			</div>
 
@@ -27,7 +34,7 @@
 				<div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4">
 					<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
 				</div>
-				<h3 class="text-3xl font-bold text-gray-800 mb-1">720</h3>
+				<h3 class="text-3xl font-bold text-gray-800 mb-1">{data.kependudukan.kepalaKeluarga.toLocaleString('id-ID')}</h3>
 				<p class="text-gray-500 font-medium">Kepala Keluarga</p>
 			</div>
 
@@ -35,7 +42,7 @@
 				<div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4">
 					<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
 				</div>
-				<h3 class="text-3xl font-bold text-gray-800 mb-1">1.215</h3>
+				<h3 class="text-3xl font-bold text-gray-800 mb-1">{data.kependudukan.lakiLaki.toLocaleString('id-ID')}</h3>
 				<p class="text-gray-500 font-medium">Laki-Laki</p>
 			</div>
 
@@ -43,7 +50,7 @@
 				<div class="w-14 h-14 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mb-4">
 					<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
 				</div>
-				<h3 class="text-3xl font-bold text-gray-800 mb-1">1.235</h3>
+				<h3 class="text-3xl font-bold text-gray-800 mb-1">{data.kependudukan.perempuan.toLocaleString('id-ID')}</h3>
 				<p class="text-gray-500 font-medium">Perempuan</p>
 			</div>
 		</div>
@@ -59,22 +66,14 @@
 					Tingkat Pendidikan
 				</h2>
 				<div class="space-y-5">
+					{#each data.pendidikan as p, i}
 					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">SD / Sederajat</span><span class="text-gray-500">40%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-blue-500 h-2.5 rounded-full" style="width: 40%"></div></div>
+						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">{p.nama}</span><span class="text-gray-500">{p.persentase}%</span></div>
+						<div class="w-full bg-gray-100 rounded-full h-2.5">
+							<div class="{blueColors[i % blueColors.length]} h-2.5 rounded-full" style="width: {p.persentase}%"></div>
+						</div>
 					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">SMP / Sederajat</span><span class="text-gray-500">30%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-blue-400 h-2.5 rounded-full" style="width: 30%"></div></div>
-					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">SMA / Sederajat</span><span class="text-gray-500">20%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-blue-300 h-2.5 rounded-full" style="width: 20%"></div></div>
-					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">Diploma / Sarjana</span><span class="text-gray-500">10%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-blue-200 h-2.5 rounded-full" style="width: 10%"></div></div>
-					</div>
+					{/each}
 				</div>
 			</div>
 
@@ -87,99 +86,18 @@
 					Mata Pencaharian
 				</h2>
 				<div class="space-y-5">
+					{#each data.pekerjaan as p, i}
 					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">Petani / Pekebun</span><span class="text-gray-500">55%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-green-500 h-2.5 rounded-full" style="width: 55%"></div></div>
+						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">{p.nama}</span><span class="text-gray-500">{p.persentase}%</span></div>
+						<div class="w-full bg-gray-100 rounded-full h-2.5">
+							<div class="{greenColors[i % greenColors.length]} h-2.5 rounded-full" style="width: {p.persentase}%"></div>
+						</div>
 					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">Wiraswasta / Pedagang</span><span class="text-gray-500">20%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-green-400 h-2.5 rounded-full" style="width: 20%"></div></div>
-					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">Karyawan Swasta</span><span class="text-gray-500">15%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-green-300 h-2.5 rounded-full" style="width: 15%"></div></div>
-					</div>
-					<div>
-						<div class="flex justify-between text-sm mb-1"><span class="font-medium text-gray-700">PNS / TNI / Polri</span><span class="text-gray-500">10%</span></div>
-						<div class="w-full bg-gray-100 rounded-full h-2.5"><div class="bg-green-200 h-2.5 rounded-full" style="width: 10%"></div></div>
-					</div>
+					{/each}
 				</div>
 			</div>
 		</div>
 
-		<!-- Section 3: Transparansi Anggaran -->
-		<div class="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100 mb-16 relative overflow-hidden">
-			<!-- Background decoration -->
-			<div class="absolute top-0 right-0 w-64 h-64 bg-green-50 rounded-bl-full -mr-10 -mt-10 opacity-50 pointer-events-none"></div>
-			
-			<div class="relative z-10 text-center max-w-3xl mx-auto mb-10">
-				<h2 class="text-3xl font-bold text-gray-800 mb-3">Transparansi APBDes 2026</h2>
-				<p class="text-gray-600">Laporan ringkas mengenai rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Sopaah untuk mewujudkan pemerintahan desa yang terbuka dan akuntabel.</p>
-			</div>
 
-			<div class="grid md:grid-cols-2 gap-8">
-				<!-- Pendapatan -->
-				<div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
-					<div class="flex items-center justify-between mb-6">
-						<h3 class="text-xl font-bold text-emerald-800">Pendapatan Desa</h3>
-						<span class="bg-emerald-200 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Rp 1.450.000.000</span>
-					</div>
-					<div class="space-y-4">
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Dana Desa (DD)</h4>
-								<p class="text-xs text-gray-500">Pusat</p>
-							</div>
-							<span class="font-bold text-emerald-600">Rp 950 Juta</span>
-						</div>
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Alokasi Dana Desa (ADD)</h4>
-								<p class="text-xs text-gray-500">Kabupaten</p>
-							</div>
-							<span class="font-bold text-emerald-600">Rp 400 Juta</span>
-						</div>
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Pendapatan Asli Desa (PADes)</h4>
-								<p class="text-xs text-gray-500">BUMDes & Hasil Tanah</p>
-							</div>
-							<span class="font-bold text-emerald-600">Rp 100 Juta</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Belanja -->
-				<div class="bg-orange-50 rounded-2xl p-6 border border-orange-100">
-					<div class="flex items-center justify-between mb-6">
-						<h3 class="text-xl font-bold text-orange-800">Belanja Desa</h3>
-						<span class="bg-orange-200 text-orange-800 text-xs font-bold px-3 py-1 rounded-full">Rp 1.450.000.000</span>
-					</div>
-					<div class="space-y-4">
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Pelaksanaan Pembangunan</h4>
-								<p class="text-xs text-gray-500">Infrastruktur & Kesehatan</p>
-							</div>
-							<span class="font-bold text-orange-600">Rp 750 Juta</span>
-						</div>
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Penyelenggaraan Pemerintahan</h4>
-								<p class="text-xs text-gray-500">Operasional & Gaji</p>
-							</div>
-							<span class="font-bold text-orange-600">Rp 450 Juta</span>
-						</div>
-						<div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center">
-							<div>
-								<h4 class="font-bold text-gray-700 text-sm">Pemberdayaan Masyarakat</h4>
-								<p class="text-xs text-gray-500">Pelatihan & Pertanian</p>
-							</div>
-							<span class="font-bold text-orange-600">Rp 250 Juta</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
