@@ -5,10 +5,13 @@ import { pengaturan } from '$lib/server/db/schema';
 import { inArray } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
-	const data = await db.select().from(pengaturan).where(inArray(pengaturan.kunci, ['data_kependudukan', 'data_pendidikan', 'data_pekerjaan']));
-	
+	const data = await db
+		.select()
+		.from(pengaturan)
+		.where(inArray(pengaturan.kunci, ['data_kependudukan', 'data_pendidikan', 'data_pekerjaan']));
+
 	let kependudukan = { totalJiwa: 0, kepalaKeluarga: 0, lakiLaki: 0, perempuan: 0 };
-	
+
 	const defaultPendidikan = [
 		{ nama: 'Belum/Tidak Sekolah', persentase: 0 },
 		{ nama: 'Belum Tamat SD/Sederajat', persentase: 0 },
@@ -37,14 +40,14 @@ export const load: PageServerLoad = async () => {
 
 	let pendidikan: any[] = [];
 	let pekerjaan: any[] = [];
-	
-	data.forEach(row => {
+
+	data.forEach((row) => {
 		try {
 			if (row.kunci === 'data_kependudukan') kependudukan = JSON.parse(row.nilai);
 			if (row.kunci === 'data_pendidikan') pendidikan = JSON.parse(row.nilai);
 			if (row.kunci === 'data_pekerjaan') pekerjaan = JSON.parse(row.nilai);
 		} catch (e) {
-			console.error("Failed to parse JSON for", row.kunci);
+			console.error('Failed to parse JSON for', row.kunci);
 		}
 	});
 
@@ -57,7 +60,7 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	simpan: async ({ request }) => {
 		const formData = await request.formData();
-		
+
 		const kependudukanStr = formData.get('kependudukan')?.toString();
 		const pendidikanStr = formData.get('pendidikan')?.toString();
 		const pekerjaanStr = formData.get('pekerjaan')?.toString();
@@ -77,9 +80,15 @@ export const actions: Actions = {
 
 		// Helper to save or update
 		const saveSetting = async (kunci: string, nilai: string) => {
-			const existing = await db.select().from(pengaturan).where(inArray(pengaturan.kunci, [kunci]));
+			const existing = await db
+				.select()
+				.from(pengaturan)
+				.where(inArray(pengaturan.kunci, [kunci]));
 			if (existing.length > 0) {
-				await db.update(pengaturan).set({ nilai }).where(inArray(pengaturan.kunci, [kunci]));
+				await db
+					.update(pengaturan)
+					.set({ nilai })
+					.where(inArray(pengaturan.kunci, [kunci]));
 			} else {
 				await db.insert(pengaturan).values({ kunci, nilai });
 			}

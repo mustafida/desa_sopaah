@@ -1,4 +1,13 @@
-import { mysqlTable, serial, int, text, varchar, boolean, timestamp, datetime } from 'drizzle-orm/mysql-core';
+import {
+	mysqlTable,
+	serial,
+	int,
+	text,
+	varchar,
+	boolean,
+	timestamp,
+	datetime
+} from 'drizzle-orm/mysql-core';
 
 // Tabel admin untuk login
 export const adminUsers = mysqlTable('admin_users', {
@@ -38,6 +47,7 @@ export const umkm = mysqlTable('umkm', {
 	gambarUrl: text('gambar_url'),
 	noWhatsapp: varchar('no_whatsapp', { length: 20 }),
 	alamat: text('alamat'),
+	videoUrl: text('video_url'),
 	createdAt: timestamp('created_at').defaultNow()
 });
 

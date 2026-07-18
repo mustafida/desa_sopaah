@@ -11,17 +11,19 @@ Ke depannya, kami berharap dapat memperluas jangkauan pasar hingga ke luar kota 
 async function updateUMKMDescriptions() {
 	const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root@localhost:3306/sopaah_db';
 	console.log('🔄 Memperbarui deskripsi UMKM menjadi teks panjang...');
-	
+
 	const pool = mysql.createPool(DATABASE_URL);
 
 	try {
-		await pool.query(`
+		await pool.query(
+			`
 			UPDATE umkm 
 			SET deskripsi = ?
-		`, [dummyLongText]);
-		
-		console.log('   ✅ Semua UMKM telah diperbarui dengan deskripsi panjang (dummy text).');
+		`,
+			[dummyLongText]
+		);
 
+		console.log('   ✅ Semua UMKM telah diperbarui dengan deskripsi panjang (dummy text).');
 	} catch (error) {
 		console.error('Error:', error);
 	} finally {

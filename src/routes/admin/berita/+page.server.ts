@@ -6,10 +6,7 @@ import { desc, eq } from 'drizzle-orm';
 import { saveUploadedFile } from '$lib/server/upload';
 
 export const load: PageServerLoad = async () => {
-	const allBerita = await db
-		.select()
-		.from(berita)
-		.orderBy(desc(berita.createdAt));
+	const allBerita = await db.select().from(berita).orderBy(desc(berita.createdAt));
 
 	return { beritaList: allBerita };
 };
@@ -21,6 +18,9 @@ export const actions: Actions = {
 		const isi = formData.get('isi')?.toString().trim();
 		const kategori = formData.get('kategori')?.toString().trim() || 'Umum';
 		const isFeatured = formData.get('is_featured') === 'on';
+
+		const createdAtVal = formData.get('created_at')?.toString();
+		const createdAt = createdAtVal ? new Date(createdAtVal) : new Date();
 
 		// Handle file upload
 		const gambarFile = formData.get('gambar') as File | null;
@@ -38,7 +38,8 @@ export const actions: Actions = {
 			isi,
 			kategori,
 			gambarUrl,
-			isFeatured
+			isFeatured,
+			createdAt
 		});
 
 		return { success: true, message: 'Berita berhasil ditambahkan!' };
@@ -52,6 +53,9 @@ export const actions: Actions = {
 		const kategori = formData.get('kategori')?.toString().trim() || 'Umum';
 		const isFeatured = formData.get('is_featured') === 'on';
 
+		const createdAtVal = formData.get('created_at')?.toString();
+		const createdAt = createdAtVal ? new Date(createdAtVal) : undefined;
+
 		// Handle file upload - only update if new file is provided
 		const gambarFile = formData.get('gambar') as File | null;
 		const existingGambar = formData.get('existing_gambar')?.toString() || null;
@@ -64,8 +68,9 @@ export const actions: Actions = {
 			return fail(400, { error: 'Data tidak lengkap', action: 'edit' });
 		}
 
-		await db.update(berita)
-			.set({ judul, isi, kategori, gambarUrl, isFeatured, updatedAt: new Date() })
+		await db
+			.update(berita)
+			.set({ judul, isi, kategori, gambarUrl, isFeatured, createdAt, updatedAt: new Date() })
 			.where(eq(berita.id, id));
 
 		return { success: true, message: 'Berita berhasil diperbarui!' };

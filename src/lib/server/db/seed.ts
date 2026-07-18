@@ -33,7 +33,8 @@ async function seed() {
 		console.log('\n📰 Menambahkan contoh berita...');
 		await db.insert(berita).values([
 			{
-				judul: 'Panen Raya Pisang 2026: Pamekasan Tunjuk Sopaah Sebagai Desa Percontohan Lumbung Pangan',
+				judul:
+					'Panen Raya Pisang 2026: Pamekasan Tunjuk Sopaah Sebagai Desa Percontohan Lumbung Pangan',
 				isi: 'Pemerintah Kabupaten Pamekasan secara resmi menunjuk Desa Sopaah sebagai desa percontohan lumbung pangan daerah, khususnya untuk komoditas pisang. Hal ini menyusul keberhasilan warga Sopaah dalam memaksimalkan potensi lahan agraris yang ada. Kepala Desa Sopaah menyampaikan apresiasi tinggi atas kerja keras seluruh warga yang telah berkontribusi dalam program ini.',
 				kategori: 'Pertanian',
 				gambarUrl: '/img/slider1.jpg',
@@ -62,7 +63,8 @@ async function seed() {
 			{
 				namaUsaha: 'Jamu Adiba Herbal',
 				pemilik: 'Ibu Adiba',
-				deskripsi: 'Menyediakan berbagai macam jamu herbal tradisional yang diracik dari bahan alami pilihan untuk kesehatan keluarga.',
+				deskripsi:
+					'Menyediakan berbagai macam jamu herbal tradisional yang diracik dari bahan alami pilihan untuk kesehatan keluarga.',
 				kategori: 'Kesehatan',
 				noWhatsapp: '081234567890',
 				alamat: 'Dusun Timur RT 01/RW 02'
@@ -70,7 +72,8 @@ async function seed() {
 			{
 				namaUsaha: '3 Putri Rengginang',
 				pemilik: 'Ibu Putri',
-				deskripsi: 'Rengginang gurih dan renyah khas Sopaah dengan berbagai varian rasa seperti terasi, bawang, dan udang. Cocok untuk camilan dan oleh-oleh. dkdsjghjghshguihaishguahihgiuahhgiuahgiuhiasuhiuhseuhgisuhdguhahaigheughudhsbsdhguauwhgusegijsihfiuahighisuhgiuhsihgishgehoiagjiahgiosaghwwfahvjb',
+				deskripsi:
+					'Rengginang gurih dan renyah khas Sopaah dengan berbagai varian rasa seperti terasi, bawang, dan udang. Cocok untuk camilan dan oleh-oleh. dkdsjghjghshguihaishguahihgiuahhgiuahgiuhiasuhiuhseuhgisuhdguhahaigheughudhsbsdhguauwhgusegijsihfiuahighisuhgiuhsihgishgehoiagjiahgiosaghwwfahvjb',
 				kategori: 'Makanan & Minuman',
 				noWhatsapp: '081298765432',
 				alamat: 'Dusun Barat RT 03/RW 01'
@@ -78,7 +81,8 @@ async function seed() {
 			{
 				namaUsaha: 'Budidaya Ayam Kampung Organik',
 				pemilik: 'Bapak Slamet',
-				deskripsi: 'Peternakan ayam kampung organik yang menghasilkan telur dan daging ayam kampung berkualitas premium. Ayam dipelihara dengan pakan alami tanpa bahan kimia.',
+				deskripsi:
+					'Peternakan ayam kampung organik yang menghasilkan telur dan daging ayam kampung berkualitas premium. Ayam dipelihara dengan pakan alami tanpa bahan kimia.',
 				kategori: 'Peternakan',
 				noWhatsapp: '085712345678',
 				alamat: 'Dusun Utara RT 02/RW 03'
@@ -100,7 +104,6 @@ async function seed() {
 		console.log('   Username: admin');
 		console.log('   Password: admin123');
 		console.log('\n⚠️  PENTING: Segera ganti password setelah login pertama!\n');
-
 	} catch (error: any) {
 		if (error.code === 'ER_DUP_ENTRY') {
 			console.log('\n⚠️  Data seed sudah ada di database. Lewati...');

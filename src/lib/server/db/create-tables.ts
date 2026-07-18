@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 async function createTables() {
 	const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root@localhost:3306/sopaah_db';
 	console.log('🔧 Membuat tabel secara langsung...');
-	
+
 	const pool = mysql.createPool(DATABASE_URL);
 
 	// Drop old task table if exists

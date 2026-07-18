@@ -4,8 +4,11 @@ import { pengaturan } from '$lib/server/db/schema';
 import { inArray } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
-	const data = await db.select().from(pengaturan).where(inArray(pengaturan.kunci, ['kepala_desa', 'visi_misi', 'struktur_pemerintahan']));
-	
+	const data = await db
+		.select()
+		.from(pengaturan)
+		.where(inArray(pengaturan.kunci, ['kepala_desa', 'visi_misi', 'struktur_pemerintahan']));
+
 	let kepalaDesa = 'Cicik Ernawati';
 	let visiMisi = { visi: '', misi: [] };
 	let struktur = {
@@ -20,13 +23,17 @@ export const load: PageServerLoad = async () => {
 		fotoKepalaDesa: ''
 	};
 
-	data.forEach(row => {
+	data.forEach((row) => {
 		if (row.kunci === 'kepala_desa') kepalaDesa = row.nilai;
 		if (row.kunci === 'visi_misi') {
-			try { visiMisi = JSON.parse(row.nilai); } catch (e) {}
+			try {
+				visiMisi = JSON.parse(row.nilai);
+			} catch (e) {}
 		}
 		if (row.kunci === 'struktur_pemerintahan') {
-			try { struktur = { ...struktur, ...JSON.parse(row.nilai) }; } catch (e) {}
+			try {
+				struktur = { ...struktur, ...JSON.parse(row.nilai) };
+			} catch (e) {}
 		}
 	});
 

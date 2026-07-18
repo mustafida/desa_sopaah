@@ -4,8 +4,11 @@ import { pengaturan } from '$lib/server/db/schema';
 import { inArray } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
-	const data = await db.select().from(pengaturan).where(inArray(pengaturan.kunci, ['data_kependudukan', 'data_pendidikan', 'data_pekerjaan']));
-	
+	const data = await db
+		.select()
+		.from(pengaturan)
+		.where(inArray(pengaturan.kunci, ['data_kependudukan', 'data_pendidikan', 'data_pekerjaan']));
+
 	let kependudukan = { totalJiwa: 2450, kepalaKeluarga: 720, lakiLaki: 1215, perempuan: 1235 };
 	let pendidikan = [
 		{ nama: 'SD / Sederajat', persentase: 40 },
@@ -20,13 +23,13 @@ export const load: PageServerLoad = async () => {
 		{ nama: 'PNS / TNI / Polri', persentase: 10 }
 	];
 
-	data.forEach(row => {
+	data.forEach((row) => {
 		try {
 			if (row.kunci === 'data_kependudukan') kependudukan = JSON.parse(row.nilai);
 			if (row.kunci === 'data_pendidikan') pendidikan = JSON.parse(row.nilai);
 			if (row.kunci === 'data_pekerjaan') pekerjaan = JSON.parse(row.nilai);
 		} catch (e) {
-			console.error("Failed to parse JSON for", row.kunci);
+			console.error('Failed to parse JSON for', row.kunci);
 		}
 	});
 

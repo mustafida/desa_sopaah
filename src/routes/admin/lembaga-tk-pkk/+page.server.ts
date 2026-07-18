@@ -6,19 +6,24 @@ import { eq, desc, and } from 'drizzle-orm';
 import { saveUploadedFile } from '$lib/server/upload';
 
 export const load: PageServerLoad = async () => {
-	const data = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur')).limit(1);
-	let struktur = { 
+	const data = await db
+		.select()
+		.from(pengaturan)
+		.where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur'))
+		.limit(1);
+	let struktur = {
 		ketuaYayasan: 'CICIK ERNAWATI',
-		kepalaSekolah: 'MARDIYAH, S.Pd', 
+		kepalaSekolah: 'MARDIYAH, S.Pd',
 		operatorSekolah: 'RINA PARAMITA, S.Pd',
-		sekretaris: 'JUHAIRIAH, S.Pd', 
-		bendahara: 'SRI ASTUTIK, S.Pd', 
+		sekretaris: 'JUHAIRIAH, S.Pd',
+		bendahara: 'SRI ASTUTIK, S.Pd',
 		guruKelompokA: 'JUHAIRIAH, S.Pd',
 		guruKelompokB: 'SRI ASTUTIK, S.Pd\nRINA PARAMITA, S.Pd',
 		npsn: '60726043',
 		status: 'Swasta / Yayasan',
 		akreditasi: 'Terakreditasi C',
-		alamat: 'Jalan Raya Sopaah, Desa Sopaah, Kecamatan Pademawu, Kabupaten Pamekasan, Kode Pos 69381.',
+		alamat:
+			'Jalan Raya Sopaah, Desa Sopaah, Kecamatan Pademawu, Kabupaten Pamekasan, Kode Pos 69381.',
 		email: 'tksopaah@gmail.com',
 		noWhatsapp: '081935168460',
 		visi: 'Menjadikan sekolah yang dapat mewujudkan siswa yang bertaqwa kepada Tuhan Yang Maha Esa yang berilmu, berprestasi, mandiri dan berkarya, santun dalam berperilaku dan kreatif.',
@@ -34,17 +39,21 @@ export const load: PageServerLoad = async () => {
 			'Mendidik anak agar menjadi generasi yang berkualitas, berguna bagi agama, nusa dan bangsa'
 		]
 	};
-	
+
 	if (data.length > 0 && data[0].nilai) {
 		try {
 			const parsed = JSON.parse(data[0].nilai);
 			struktur = { ...struktur, ...parsed };
 		} catch (e) {
-			console.error("Failed to parse lembaga_tk_pkk_struktur JSON");
+			console.error('Failed to parse lembaga_tk_pkk_struktur JSON');
 		}
 	}
 
-	const dokumentasi = await db.select().from(galeri).where(eq(galeri.kategori, 'TK PKK')).orderBy(desc(galeri.createdAt));
+	const dokumentasi = await db
+		.select()
+		.from(galeri)
+		.where(eq(galeri.kategori, 'TK PKK'))
+		.orderBy(desc(galeri.createdAt));
 
 	return { struktur, dokumentasi };
 };
@@ -71,16 +80,36 @@ export const actions: Actions = {
 		const misi = JSON.parse(formData.get('misi')?.toString() || '[]');
 		const tujuan = JSON.parse(formData.get('tujuan')?.toString() || '[]');
 
-		const newVal = JSON.stringify({ 
-			ketuaYayasan, kepalaSekolah, operatorSekolah, sekretaris, bendahara, guruKelompokA, guruKelompokB,
-			npsn, status, akreditasi, alamat, email, noWhatsapp,
-			visi, misi, tujuan
+		const newVal = JSON.stringify({
+			ketuaYayasan,
+			kepalaSekolah,
+			operatorSekolah,
+			sekretaris,
+			bendahara,
+			guruKelompokA,
+			guruKelompokB,
+			npsn,
+			status,
+			akreditasi,
+			alamat,
+			email,
+			noWhatsapp,
+			visi,
+			misi,
+			tujuan
 		});
 
-		const existing = await db.select().from(pengaturan).where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur')).limit(1);
-		
+		const existing = await db
+			.select()
+			.from(pengaturan)
+			.where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur'))
+			.limit(1);
+
 		if (existing.length > 0) {
-			await db.update(pengaturan).set({ nilai: newVal }).where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur'));
+			await db
+				.update(pengaturan)
+				.set({ nilai: newVal })
+				.where(eq(pengaturan.kunci, 'lembaga_tk_pkk_struktur'));
 		} else {
 			await db.insert(pengaturan).values({ kunci: 'lembaga_tk_pkk_struktur', nilai: newVal });
 		}

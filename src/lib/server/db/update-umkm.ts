@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 async function updateUMKM() {
 	const DATABASE_URL = process.env.DATABASE_URL || 'mysql://root@localhost:3306/sopaah_db';
 	console.log('🔄 Memperbarui data UMKM...');
-	
+
 	const pool = mysql.createPool(DATABASE_URL);
 
 	try {
@@ -30,7 +30,6 @@ async function updateUMKM() {
 			WHERE id = 2
 		`);
 		console.log('   ✅ UMKM 2 diperbarui menjadi 3 Putri Rengginang');
-
 	} catch (error) {
 		console.error('Error:', error);
 	} finally {

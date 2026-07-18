@@ -7,11 +7,7 @@ export const load: PageServerLoad = async () => {
 	const [beritaCount] = await db.select({ value: count() }).from(berita);
 	const [umkmCount] = await db.select({ value: count() }).from(umkm);
 
-	const recentBerita = await db
-		.select()
-		.from(berita)
-		.orderBy(desc(berita.createdAt))
-		.limit(5);
+	const recentBerita = await db.select().from(berita).orderBy(desc(berita.createdAt)).limit(5);
 
 	return {
 		totalBerita: beritaCount.value,

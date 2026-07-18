@@ -6,10 +6,7 @@ import { desc, eq } from 'drizzle-orm';
 import { saveUploadedFile } from '$lib/server/upload';
 
 export const load: PageServerLoad = async () => {
-	const allUmkm = await db
-		.select()
-		.from(umkm)
-		.orderBy(desc(umkm.createdAt));
+	const allUmkm = await db.select().from(umkm).orderBy(desc(umkm.createdAt));
 
 	return { umkmList: allUmkm };
 };
@@ -31,8 +28,18 @@ export const actions: Actions = {
 			gambarUrl = await saveUploadedFile(gambarFile);
 		}
 
+		// Handle video upload
+		const videoFile = formData.get('video') as File | null;
+		let videoUrl: string | null = null;
+		if (videoFile && videoFile.size > 0) {
+			videoUrl = await saveUploadedFile(videoFile);
+		}
+
 		if (!namaUsaha || !pemilik || !deskripsi) {
-			return fail(400, { error: 'Nama usaha, pemilik, dan deskripsi harus diisi', action: 'tambah' });
+			return fail(400, {
+				error: 'Nama usaha, pemilik, dan deskripsi harus diisi',
+				action: 'tambah'
+			});
 		}
 
 		await db.insert(umkm).values({
@@ -42,7 +49,8 @@ export const actions: Actions = {
 			kategori,
 			gambarUrl,
 			noWhatsapp,
-			alamat
+			alamat,
+			videoUrl
 		});
 
 		return { success: true, message: 'UMKM berhasil ditambahkan!' };
@@ -57,7 +65,6 @@ export const actions: Actions = {
 		const kategori = formData.get('kategori')?.toString().trim() || 'Lainnya';
 		const noWhatsapp = formData.get('no_whatsapp')?.toString().trim() || null;
 		const alamat = formData.get('alamat')?.toString().trim() || null;
-
 		// Handle file upload - only update if new file is provided
 		const gambarFile = formData.get('gambar') as File | null;
 		const existingGambar = formData.get('existing_gambar')?.toString() || null;
@@ -66,12 +73,21 @@ export const actions: Actions = {
 			gambarUrl = await saveUploadedFile(gambarFile);
 		}
 
+		// Handle video upload - only update if new file is provided
+		const videoFile = formData.get('video') as File | null;
+		const existingVideo = formData.get('existing_video')?.toString() || null;
+		let videoUrl = existingVideo;
+		if (videoFile && videoFile.size > 0) {
+			videoUrl = await saveUploadedFile(videoFile);
+		}
+
 		if (!id || !namaUsaha || !pemilik || !deskripsi) {
 			return fail(400, { error: 'Data tidak lengkap', action: 'edit' });
 		}
 
-		await db.update(umkm)
-			.set({ namaUsaha, pemilik, deskripsi, kategori, gambarUrl, noWhatsapp, alamat })
+		await db
+			.update(umkm)
+			.set({ namaUsaha, pemilik, deskripsi, kategori, gambarUrl, noWhatsapp, alamat, videoUrl })
 			.where(eq(umkm.id, id));
 
 		return { success: true, message: 'UMKM berhasil diperbarui!' };
