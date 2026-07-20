@@ -19,18 +19,23 @@ async function seed() {
 	const client = mysql.createPool(DATABASE_URL);
 	const db = drizzle(client, { mode: 'default' });
 
+	// 1. Seed Admin User
+	console.log('\n👤 Membuat akun admin...');
 	try {
-		// 1. Seed Admin User
-		console.log('\n👤 Membuat akun admin...');
 		await db.insert(adminUsers).values({
 			username: 'admin',
 			passwordHash: hashPassword('admin123'),
 			namaLengkap: 'Administrator Desa'
 		});
 		console.log('   ✅ Admin dibuat: username=admin, password=admin123');
+	} catch (e: any) {
+		if (e.code === 'ER_DUP_ENTRY') console.log('   ⚠️ Admin sudah ada');
+		else console.error('   ❌ Error admin:', e.message);
+	}
 
-		// 2. Seed Berita
-		console.log('\n📰 Menambahkan contoh berita...');
+	// 2. Seed Berita
+	console.log('\n📰 Menambahkan contoh berita...');
+	try {
 		await db.insert(berita).values([
 			{
 				judul:
@@ -56,9 +61,13 @@ async function seed() {
 			}
 		]);
 		console.log('   ✅ 3 berita contoh ditambahkan');
+	} catch (e: any) {
+		console.log('   ⚠️ Berita contoh lewati / sudah ada');
+	}
 
-		// 3. Seed UMKM
-		console.log('\n🏪 Menambahkan contoh UMKM...');
+	// 3. Seed UMKM
+	console.log('\n🏪 Menambahkan contoh UMKM...');
+	try {
 		await db.insert(umkm).values([
 			{
 				namaUsaha: 'Jamu Adiba Herbal',
@@ -73,7 +82,7 @@ async function seed() {
 				namaUsaha: '3 Putri Rengginang',
 				pemilik: 'Ibu Putri',
 				deskripsi:
-					'Rengginang gurih dan renyah khas Sopaah dengan berbagai varian rasa seperti terasi, bawang, dan udang. Cocok untuk camilan dan oleh-oleh. dkdsjghjghshguihaishguahihgiuahhgiuahgiuhiasuhiuhseuhgisuhdguhahaigheughudhsbsdhguauwhgusegijsihfiuahighisuhgiuhsihgishgehoiagjiahgiosaghwwfahvjb',
+					'Rengginang gurih dan renyah khas Sopaah dengan berbagai varian rasa seperti terasi, bawang, dan udang. Cocok untuk camilan dan oleh-oleh.',
 				kategori: 'Makanan & Minuman',
 				noWhatsapp: '081298765432',
 				alamat: 'Dusun Barat RT 03/RW 01'
@@ -89,9 +98,13 @@ async function seed() {
 			}
 		]);
 		console.log('   ✅ 3 UMKM contoh ditambahkan');
+	} catch (e: any) {
+		console.log('   ⚠️ UMKM contoh lewati / sudah ada');
+	}
 
-		// 4. Seed Pengaturan (Settings)
-		console.log('\n⚙️ Menambahkan pengaturan default...');
+	// 4. Seed Pengaturan (Settings)
+	console.log('\n⚙️ Menambahkan pengaturan default...');
+	try {
 		await db.insert(pengaturan).values([
 			{
 				kunci: 'kepala_desa',
@@ -99,21 +112,12 @@ async function seed() {
 			}
 		]);
 		console.log('   ✅ Pengaturan default ditambahkan (Kepala Desa)');
-
-		console.log('\n🎉 Seeding selesai! Anda bisa login dengan:');
-		console.log('   Username: admin');
-		console.log('   Password: admin123');
-		console.log('\n⚠️  PENTING: Segera ganti password setelah login pertama!\n');
-	} catch (error: any) {
-		if (error.code === 'ER_DUP_ENTRY') {
-			console.log('\n⚠️  Data seed sudah ada di database. Lewati...');
-		} else {
-			console.error('\n❌ Error saat seeding:', error);
-			throw error;
-		}
-	} finally {
-		await client.end();
+	} catch (e: any) {
+		console.log('   ⚠️ Pengaturan kepala_desa sudah ada');
 	}
+
+	console.log('\n🎉 Seeding selesai!');
+	await client.end();
 }
 
 seed();

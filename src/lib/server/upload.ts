@@ -1,14 +1,17 @@
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
+import { writeFile, mkdir } from 'fs/promises';
+import { join, resolve } from 'path';
 import { randomBytes } from 'crypto';
 
-const UPLOAD_DIR = 'static/uploads';
+const UPLOAD_DIR = resolve(process.cwd(), 'static/uploads');
 
 /**
  * Simpan file yang diupload ke static/uploads dan return URL-nya
  */
 export async function saveUploadedFile(file: File): Promise<string | null> {
 	if (!file || file.size === 0) return null;
+
+	// Pastikan direktori static/uploads ada
+	await mkdir(UPLOAD_DIR, { recursive: true });
 
 	// Generate unique filename
 	const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
