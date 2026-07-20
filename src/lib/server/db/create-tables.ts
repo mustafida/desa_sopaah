@@ -6,21 +6,27 @@ async function createTables() {
 
 	const pool = mysql.createPool(DATABASE_URL);
 
-	// Drop old task table if exists
-	await pool.query(`DROP TABLE IF EXISTS task`);
-	console.log('   ✅ Tabel lama "task" dihapus');
+	// Drop old unused legacy tables if they exist
+	const unusedTables = ['task', 'admins', 'dokumentasi', 'profil_desa', 'surat'];
+	for (const table of unusedTables) {
+		await pool.query(`DROP TABLE IF EXISTS ${table}`);
+	}
+	console.log(
+		'   ✅ Tabel lama yang tidak terpakai (admins, dokumentasi, profil_desa, surat, task) telah dibersihkan'
+	);
 
 	// Create admin_users table
 	await pool.query(`
 		CREATE TABLE IF NOT EXISTS admin_users (
 			id SERIAL PRIMARY KEY,
 			username VARCHAR(100) NOT NULL UNIQUE,
-			password_hash TEXT NOT NULL,
+			password_hash LONGTEXT NOT NULL,
 			nama_lengkap VARCHAR(255) NOT NULL,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`);
-	console.log('   ✅ Tabel admin_users dibuat');
+	await pool.query(`ALTER TABLE admin_users MODIFY COLUMN password_hash LONGTEXT`).catch(() => {});
+	console.log('   ✅ Tabel admin_users dibuat/diperbarui');
 
 	// Create sessions table
 	await pool.query(`
@@ -37,15 +43,17 @@ async function createTables() {
 		CREATE TABLE IF NOT EXISTS berita (
 			id SERIAL PRIMARY KEY,
 			judul VARCHAR(500) NOT NULL,
-			isi TEXT NOT NULL,
+			isi LONGTEXT NOT NULL,
 			kategori VARCHAR(100) NOT NULL DEFAULT 'Umum',
-			gambar_url TEXT,
+			gambar_url LONGTEXT,
 			is_featured BOOLEAN NOT NULL DEFAULT FALSE,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`);
-	console.log('   ✅ Tabel berita dibuat');
+	await pool.query(`ALTER TABLE berita MODIFY COLUMN gambar_url LONGTEXT`).catch(() => {});
+	await pool.query(`ALTER TABLE berita MODIFY COLUMN isi LONGTEXT`).catch(() => {});
+	console.log('   ✅ Tabel berita dibuat/diperbarui (LONGTEXT)');
 
 	// Create umkm table
 	await pool.query(`
@@ -53,36 +61,41 @@ async function createTables() {
 			id SERIAL PRIMARY KEY,
 			nama_usaha VARCHAR(255) NOT NULL,
 			pemilik VARCHAR(255) NOT NULL,
-			deskripsi TEXT NOT NULL,
+			deskripsi LONGTEXT NOT NULL,
 			kategori VARCHAR(100) NOT NULL DEFAULT 'Lainnya',
-			gambar_url TEXT,
+			gambar_url LONGTEXT,
 			no_whatsapp VARCHAR(20),
-			alamat TEXT,
+			alamat LONGTEXT,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`);
-	console.log('   ✅ Tabel umkm dibuat');
+	await pool.query(`ALTER TABLE umkm MODIFY COLUMN gambar_url LONGTEXT`).catch(() => {});
+	await pool.query(`ALTER TABLE umkm MODIFY COLUMN deskripsi LONGTEXT`).catch(() => {});
+	await pool.query(`ALTER TABLE umkm MODIFY COLUMN alamat LONGTEXT`).catch(() => {});
+	console.log('   ✅ Tabel umkm dibuat/diperbarui (LONGTEXT)');
 
 	// Create pengaturan table
 	await pool.query(`
 		CREATE TABLE IF NOT EXISTS pengaturan (
 			kunci VARCHAR(100) PRIMARY KEY,
-			nilai TEXT NOT NULL
+			nilai LONGTEXT NOT NULL
 		)
 	`);
-	console.log('   ✅ Tabel pengaturan dibuat');
+	await pool.query(`ALTER TABLE pengaturan MODIFY COLUMN nilai LONGTEXT`).catch(() => {});
+	console.log('   ✅ Tabel pengaturan dibuat/diperbarui (LONGTEXT)');
 
 	// Create galeri table
 	await pool.query(`
 		CREATE TABLE IF NOT EXISTS galeri (
 			id SERIAL PRIMARY KEY,
 			judul VARCHAR(255) NOT NULL,
-			gambar_url TEXT NOT NULL,
+			gambar_url LONGTEXT NOT NULL,
 			kategori VARCHAR(100) NOT NULL DEFAULT 'Umum',
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`);
-	console.log('   ✅ Tabel galeri dibuat');
+	await pool.query(`ALTER TABLE galeri MODIFY COLUMN gambar_url LONGTEXT`).catch(() => {});
+	console.log('   ✅ Tabel galeri dibuat/diperbarui (LONGTEXT)');
 
 	console.log('\n🎉 Semua tabel berhasil dibuat!');
 	await pool.end();

@@ -2,7 +2,7 @@ import {
 	mysqlTable,
 	serial,
 	int,
-	text,
+	longtext,
 	varchar,
 	boolean,
 	timestamp,
@@ -13,7 +13,7 @@ import {
 export const adminUsers = mysqlTable('admin_users', {
 	id: serial('id').primaryKey(),
 	username: varchar('username', { length: 100 }).notNull().unique(),
-	passwordHash: text('password_hash').notNull(),
+	passwordHash: longtext('password_hash').notNull(),
 	namaLengkap: varchar('nama_lengkap', { length: 255 }).notNull(),
 	createdAt: timestamp('created_at').defaultNow()
 });
@@ -29,9 +29,9 @@ export const sessions = mysqlTable('sessions', {
 export const berita = mysqlTable('berita', {
 	id: serial('id').primaryKey(),
 	judul: varchar('judul', { length: 500 }).notNull(),
-	isi: text('isi').notNull(),
+	isi: longtext('isi').notNull(),
 	kategori: varchar('kategori', { length: 100 }).notNull().default('Umum'),
-	gambarUrl: text('gambar_url'),
+	gambarUrl: longtext('gambar_url'),
 	isFeatured: boolean('is_featured').notNull().default(false),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
@@ -42,26 +42,26 @@ export const umkm = mysqlTable('umkm', {
 	id: serial('id').primaryKey(),
 	namaUsaha: varchar('nama_usaha', { length: 255 }).notNull(),
 	pemilik: varchar('pemilik', { length: 255 }).notNull(),
-	deskripsi: text('deskripsi').notNull(),
+	deskripsi: longtext('deskripsi').notNull(),
 	kategori: varchar('kategori', { length: 100 }).notNull().default('Lainnya'),
-	gambarUrl: text('gambar_url'),
+	gambarUrl: longtext('gambar_url'),
 	noWhatsapp: varchar('no_whatsapp', { length: 20 }),
-	alamat: text('alamat'),
-	videoUrl: text('video_url'),
+	alamat: longtext('alamat'),
+	videoUrl: longtext('video_url'),
 	createdAt: timestamp('created_at').defaultNow()
 });
 
 // Tabel pengaturan (settings)
 export const pengaturan = mysqlTable('pengaturan', {
 	kunci: varchar('kunci', { length: 100 }).primaryKey(),
-	nilai: text('nilai').notNull()
+	nilai: longtext('nilai').notNull()
 });
 
 // Tabel galeri dokumentasi
 export const galeri = mysqlTable('galeri', {
 	id: serial('id').primaryKey(),
 	judul: varchar('judul', { length: 255 }).notNull(),
-	gambarUrl: text('gambar_url').notNull(),
+	gambarUrl: longtext('gambar_url').notNull(),
 	kategori: varchar('kategori', { length: 100 }).notNull().default('Umum'),
 	createdAt: timestamp('created_at').defaultNow()
 });
