@@ -4,6 +4,7 @@
 	let { data, form } = $props();
 
 	let kepalaDesa = $state(data.kepalaDesa ?? '');
+	let sambutanKepalaDesa = $state(data.sambutanKepalaDesa ?? '');
 	let visi = $state(data.visiMisi?.visi ?? '');
 	let misiArray = $state<string[]>(data.visiMisi?.misi ?? []);
 
@@ -18,6 +19,11 @@
 	let kasunBarat = $state(data.struktur?.kasunBarat ?? '');
 	let kasunTimur = $state(data.struktur?.kasunTimur ?? '');
 	let fotoKepalaDesa = $state(data.struktur?.fotoKepalaDesa ?? '');
+	let kontakAdmin = $state(data.kontakAdmin ?? '6281234567890');
+	let sosmedInstagram = $state(data.sosialMedia?.instagram ?? '');
+	let sosmedFacebook = $state(data.sosialMedia?.facebook ?? '');
+	let sosmedYoutube = $state(data.sosialMedia?.youtube ?? '');
+	let sosmedTiktok = $state(data.sosialMedia?.tiktok ?? '');
 
 	function addMisi() {
 		misiArray = [...misiArray, ''];
@@ -33,6 +39,7 @@
 
 	$effect(() => {
 		kepalaDesa = data.kepalaDesa ?? '';
+		sambutanKepalaDesa = data.sambutanKepalaDesa ?? '';
 		visi = data.visiMisi?.visi ?? '';
 		misiArray = data.visiMisi?.misi ?? [];
 		sekdes = data.struktur?.sekdes ?? '';
@@ -44,6 +51,11 @@
 		kasunBarat = data.struktur?.kasunBarat ?? '';
 		kasunTimur = data.struktur?.kasunTimur ?? '';
 		fotoKepalaDesa = data.struktur?.fotoKepalaDesa ?? '';
+		kontakAdmin = data.kontakAdmin ?? '6281234567890';
+		sosmedInstagram = data.sosialMedia?.instagram ?? '';
+		sosmedFacebook = data.sosialMedia?.facebook ?? '';
+		sosmedYoutube = data.sosialMedia?.youtube ?? '';
+		sosmedTiktok = data.sosialMedia?.tiktok ?? '';
 	});
 </script>
 
@@ -146,6 +158,20 @@
 							placeholder="Contoh: Cicik Ernawati"
 							required
 						/>
+					</div>
+
+					<div class="md:col-span-2">
+						<label for="sambutanKepalaDesa" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Sambutan Kepala Desa</label
+						>
+						<textarea
+							id="sambutanKepalaDesa"
+							name="sambutanKepalaDesa"
+							bind:value={sambutanKepalaDesa}
+							rows="4"
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+							placeholder="Tuliskan sambutan kepala desa..."
+						></textarea>
 					</div>
 
 					<div class="md:col-span-2">
@@ -265,6 +291,80 @@
 							name="kasunTimur"
 							bind:value={kasunTimur}
 							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+						/>
+					</div>
+					<div class="md:col-span-2">
+						<h3 class="font-bold text-lg text-slate-800 mt-4 mb-2">Pengaturan Kontak & Sosial Media</h3>
+						<div class="h-px bg-slate-100 mb-4 w-full"></div>
+					</div>
+					<div class="md:col-span-2">
+						<label for="kontakAdmin" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Nomor WhatsApp Admin (Untuk Pengaduan/Kontak)</label
+						>
+						<input
+							type="text"
+							id="kontakAdmin"
+							name="kontakAdmin"
+							bind:value={kontakAdmin}
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50 mb-1"
+							placeholder="Contoh: 6281234567890"
+						/>
+						<p class="text-xs text-slate-500 mb-4">Gunakan format 62 tanpa + atau 0 di depan (contoh: 6281234567890).</p>
+					</div>
+
+					<div>
+						<label for="sosmedInstagram" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Link Instagram</label
+						>
+						<input
+							type="url"
+							id="sosmedInstagram"
+							name="sosmedInstagram"
+							bind:value={sosmedInstagram}
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+							placeholder="https://instagram.com/..."
+						/>
+					</div>
+
+					<div>
+						<label for="sosmedFacebook" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Link Facebook</label
+						>
+						<input
+							type="url"
+							id="sosmedFacebook"
+							name="sosmedFacebook"
+							bind:value={sosmedFacebook}
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+							placeholder="https://facebook.com/..."
+						/>
+					</div>
+
+					<div>
+						<label for="sosmedYoutube" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Link YouTube</label
+						>
+						<input
+							type="url"
+							id="sosmedYoutube"
+							name="sosmedYoutube"
+							bind:value={sosmedYoutube}
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+							placeholder="https://youtube.com/..."
+						/>
+					</div>
+
+					<div>
+						<label for="sosmedTiktok" class="block text-sm font-semibold text-slate-700 mb-2"
+							>Link TikTok</label
+						>
+						<input
+							type="url"
+							id="sosmedTiktok"
+							name="sosmedTiktok"
+							bind:value={sosmedTiktok}
+							class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-green-500 bg-slate-50"
+							placeholder="https://tiktok.com/..."
 						/>
 					</div>
 				</div>

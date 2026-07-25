@@ -23,7 +23,7 @@
 <div class="relative bg-slate-900 py-20 px-4 mt-[-64px] overflow-hidden">
 	<div class="absolute inset-0 overflow-hidden">
 		<img
-			src="/img/slider3.jpg"
+			src="/img/slider2.jpeg"
 			alt="Background Galeri"
 			class="w-full h-full object-cover opacity-20"
 		/>

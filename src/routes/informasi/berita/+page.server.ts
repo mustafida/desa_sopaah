@@ -32,18 +32,21 @@ export const load: PageServerLoad = async () => {
 	const settingsData = await db
 		.select()
 		.from(pengaturan)
-		.where(inArray(pengaturan.kunci, ['kepala_desa', 'struktur_pemerintahan']));
+		.where(inArray(pengaturan.kunci, ['kepala_desa', 'struktur_pemerintahan', 'kontak_admin']));
 
 	const kepalaDesa = settingsData.find((item) => item.kunci === 'kepala_desa')?.nilai || 'M. Hasan';
 	const struktur = JSON.parse(
 		settingsData.find((item) => item.kunci === 'struktur_pemerintahan')?.nilai || '{}'
 	);
 
+	const kontakAdmin = settingsData.find((item) => item.kunci === 'kontak_admin')?.nilai || '6281234567890';
+
 	return {
 		featured: featuredList[0] ?? null,
 		recentBerita: recentList.filter((b) => !b.isFeatured).slice(0, 4),
 		announcements: announcementList,
 		kepalaDesa,
-		struktur
+		struktur,
+		kontakAdmin
 	};
 };

@@ -151,8 +151,8 @@
 
 	<div class="grid lg:grid-cols-3 gap-8">
 		<!-- Visi & Misi Section (Takes up 2 columns) -->
-		<div class="lg:col-span-2">
-			<section class="mb-12 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 h-full">
+		<div class="lg:col-span-2 flex flex-col gap-8">
+			<section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex-1">
 				<h2 class="text-3xl font-bold text-green-700 mb-8 flex items-center">
 					<svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 						><path
@@ -164,13 +164,13 @@
 					>
 					Visi & Misi
 				</h2>
-				<div class="space-y-10 text-gray-700">
+				<div class="grid md:grid-cols-2 gap-10 text-gray-700">
 					<div>
 						<h3 class="font-bold text-xl mb-4 inline-block border-b-2 border-green-500 pb-2">
 							Visi:
 						</h3>
 						<p
-							class="italic leading-relaxed text-xl bg-green-50 p-6 rounded-2xl border-l-4 border-green-500 text-green-900 font-medium shadow-sm"
+							class="italic leading-relaxed text-xl text-green-900 font-medium"
 						>
 							"{data.visiMisi?.visi}"
 						</p>
@@ -183,10 +183,10 @@
 							{#each data.visiMisi?.misi || [] as misiItem, index}
 								<li class="flex items-start bg-gray-50 p-4 rounded-xl border border-gray-100">
 									<span
-										class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold mr-4 mt-0.5"
+										class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold mr-4 mt-0.5 transition-all duration-300 hover:scale-125 hover:-translate-y-1 hover:rotate-12 hover:bg-green-500 hover:text-white hover:shadow-md cursor-pointer"
 										>{index + 1}</span
 									>
-									<div class="text-gray-800">
+									<div class="text-gray-800 transition-all duration-300 hover:translate-x-2 hover:text-green-700 cursor-default">
 										{misiItem}
 									</div>
 								</li>
@@ -195,14 +195,32 @@
 					</div>
 				</div>
 			</section>
+			
+			<!-- Peta Administrasi Section -->
+			<section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+				<h2 class="text-3xl font-bold text-green-700 mb-6 flex items-center">
+					<svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+					Peta Administrasi Desa
+				</h2>
+				<p class="text-gray-600 mb-6">Klik gambar peta di bawah ini untuk melihat dalam ukuran penuh (agar QR Code dapat di-scan dengan jelas).</p>
+				<a href="/img/peta-desa-sopaah.jpg" target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded-2xl border border-slate-200 hover:shadow-2xl transition-all group relative">
+					<img src="/img/peta-desa-sopaah.jpg" alt="Peta Administrasi Desa Sopaah" class="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-500" />
+					<div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+						<div class="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2 text-emerald-700 font-bold">
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+							Perbesar Peta
+						</div>
+					</div>
+				</a>
+			</section>
 		</div>
 
 		<!-- Profil Umum & Sejarah (Takes up 1 column on the right) -->
 		<div class="space-y-8">
 			<!-- Profil Umum & Geografis -->
-			<section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-				<h2 class="text-2xl font-bold text-green-700 mb-6 flex items-center">
-					<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			<section class="bg-gradient-to-r from-white via-green-600 to-green-900 p-8 rounded-3xl shadow-lg border border-green-700/20">
+				<h2 class="text-2xl font-bold text-green-900 mb-6 flex items-center drop-shadow-sm">
+					<svg class="w-6 h-6 mr-2 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 						><path
 							stroke-linecap="round"
 							stroke-linejoin="round"
@@ -212,24 +230,24 @@
 					>
 					Profil Umum & Geografis
 				</h2>
-				<div class="flex flex-col gap-4 text-gray-700 leading-relaxed">
-					<div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-						<span class="block text-sm text-green-600 font-bold mb-1 uppercase tracking-wider"
+				<div class="flex flex-col gap-4 text-gray-700 leading-relaxed relative z-10">
+					<div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-white/50 shadow-md hover:-translate-y-1 transition-transform">
+						<span class="block text-sm text-green-700 font-extrabold mb-1 uppercase tracking-wider"
 							>Nama Wilayah</span
 						>
-						<span class="font-bold text-gray-800 text-lg">Desa Sopaah</span>
+						<span class="font-bold text-gray-900 text-lg">Desa Sopaah</span>
 					</div>
-					<div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-						<span class="block text-sm text-green-600 font-bold mb-1 uppercase tracking-wider"
+					<div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-white/50 shadow-md hover:-translate-y-1 transition-transform">
+						<span class="block text-sm text-green-700 font-extrabold mb-1 uppercase tracking-wider"
 							>Lokasi Administratif</span
 						>
-						<span class="font-medium text-gray-800">Kec. Pademawu, Kab. Pamekasan (Madura)</span>
+						<span class="font-medium text-gray-900">Kec. Pademawu, Kab. Pamekasan (Madura)</span>
 					</div>
-					<div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-						<span class="block text-sm text-green-600 font-bold mb-1 uppercase tracking-wider"
+					<div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-white/50 shadow-md hover:-translate-y-1 transition-transform">
+						<span class="block text-sm text-green-700 font-extrabold mb-1 uppercase tracking-wider"
 							>Karakteristik</span
 						>
-						<span class="text-gray-800"
+						<span class="text-gray-900 font-medium"
 							>Daerah pedesaan agraris dengan kondisi tanah yang subur.</span
 						>
 					</div>
@@ -237,9 +255,9 @@
 			</section>
 
 			<!-- Sejarah Section -->
-			<section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-				<h2 class="text-2xl font-bold text-green-700 mb-6 flex items-center">
-					<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			<section class="bg-gradient-to-r from-white via-green-600 to-green-900 p-8 rounded-3xl shadow-lg border border-green-700/20">
+				<h2 class="text-2xl font-bold text-green-900 mb-6 flex items-center drop-shadow-sm">
+					<svg class="w-6 h-6 mr-2 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"
 						><path
 							stroke-linecap="round"
 							stroke-linejoin="round"
@@ -250,7 +268,7 @@
 					Sejarah Singkat
 				</h2>
 
-				<div class="space-y-4 text-gray-700 leading-relaxed">
+				<div class="bg-white/90 backdrop-blur-sm p-6 rounded-xl border border-white/50 shadow-md relative z-10 space-y-4 text-gray-900 font-medium leading-relaxed">
 					<p>
 						Secara historis, penamaan desa ini mengakar kuat pada budaya dan legenda tutur
 						masyarakat. Nama Sopa'ah dipercaya berasal dari dialek bahasa Madura, gabungan kata "so"

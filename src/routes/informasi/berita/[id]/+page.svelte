@@ -73,7 +73,7 @@
 							/>
 						{:else}
 							<img
-								src="/img/slider1.jpg"
+								src="/img/slider1.jpeg"
 								alt="Placeholder Berita"
 								class="w-full h-auto max-h-[600px] object-contain rounded-2xl"
 							/>

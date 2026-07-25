@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { umkm } from '$lib/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
-import { saveUploadedFile } from '$lib/server/upload';
+import { saveUploadedFile, saveUploadedFileAsDisk } from '$lib/server/upload';
 
 export const load: PageServerLoad = async () => {
 	const allUmkm = await db.select().from(umkm).orderBy(desc(umkm.createdAt));
@@ -20,6 +20,11 @@ export const actions: Actions = {
 		const kategori = formData.get('kategori')?.toString().trim() || 'Lainnya';
 		const noWhatsapp = formData.get('no_whatsapp')?.toString().trim() || null;
 		const alamat = formData.get('alamat')?.toString().trim() || null;
+		const mapsUrl = formData.get('maps_url')?.toString().trim() || null;
+		const linkInstagram = formData.get('link_instagram')?.toString().trim() || null;
+		const linkFacebook = formData.get('link_facebook')?.toString().trim() || null;
+		const linkTiktok = formData.get('link_tiktok')?.toString().trim() || null;
+		const linkShopee = formData.get('link_shopee')?.toString().trim() || null;
 
 		// Handle file upload
 		const gambarFile = formData.get('gambar') as File | null;
@@ -35,6 +40,20 @@ export const actions: Actions = {
 			videoUrl = await saveUploadedFile(videoFile);
 		}
 
+		// Handle product photos upload - simpan ke disk (bukan base64) agar unlimited
+		const fotoProdukFiles = formData.getAll('foto_produk') as File[];
+		const fotoProdukUrls: string[] = [];
+		for (const file of fotoProdukFiles) {
+			if (file && file.size > 0) {
+				const url = await saveUploadedFileAsDisk(file);
+				if (url) fotoProdukUrls.push(url);
+			}
+		}
+		let fotoProduk: string | null = null;
+		if (fotoProdukUrls.length > 0) {
+			fotoProduk = JSON.stringify(fotoProdukUrls);
+		}
+
 		if (!namaUsaha || !pemilik || !deskripsi) {
 			return fail(400, {
 				error: 'Nama usaha, pemilik, dan deskripsi harus diisi',
@@ -42,7 +61,8 @@ export const actions: Actions = {
 			});
 		}
 
-		await db.insert(umkm).values({
+		try {
+			await db.insert(umkm).values({
 			namaUsaha,
 			pemilik,
 			deskripsi,
@@ -50,10 +70,23 @@ export const actions: Actions = {
 			gambarUrl,
 			noWhatsapp,
 			alamat,
-			videoUrl
-		});
+			mapsUrl,
+			videoUrl,
+			fotoProduk,
+			linkInstagram,
+			linkFacebook,
+			linkTiktok,
+				linkShopee
+			});
 
-		return { success: true, message: 'UMKM berhasil ditambahkan!' };
+			return { success: true, message: 'UMKM berhasil ditambahkan!' };
+		} catch (err: any) {
+			console.error('Error in tambah action:', err);
+			return fail(500, {
+				error: `Terjadi kesalahan saat menyimpan data: ${err.message}`,
+				action: 'tambah'
+			});
+		}
 	},
 
 	edit: async ({ request }) => {
@@ -65,6 +98,11 @@ export const actions: Actions = {
 		const kategori = formData.get('kategori')?.toString().trim() || 'Lainnya';
 		const noWhatsapp = formData.get('no_whatsapp')?.toString().trim() || null;
 		const alamat = formData.get('alamat')?.toString().trim() || null;
+		const mapsUrl = formData.get('maps_url')?.toString().trim() || null;
+		const linkInstagram = formData.get('link_instagram')?.toString().trim() || null;
+		const linkFacebook = formData.get('link_facebook')?.toString().trim() || null;
+		const linkTiktok = formData.get('link_tiktok')?.toString().trim() || null;
+		const linkShopee = formData.get('link_shopee')?.toString().trim() || null;
 		// Handle file upload - only update if new file is provided
 		const gambarFile = formData.get('gambar') as File | null;
 		const existingGambar = formData.get('existing_gambar')?.toString() || null;
@@ -81,16 +119,36 @@ export const actions: Actions = {
 			videoUrl = await saveUploadedFile(videoFile);
 		}
 
+		// Handle product photos upload - simpan ke disk (bukan base64) agar unlimited
+		const fotoProdukFiles = formData.getAll('foto_produk') as File[];
+		const keptFotoProduk = formData.getAll('kept_foto_produk') as string[];
+		
+		let fotoProdukArray = [...keptFotoProduk];
+		
+		for (const file of fotoProdukFiles) {
+			if (file && file.size > 0) {
+				const url = await saveUploadedFileAsDisk(file);
+				if (url) fotoProdukArray.push(url);
+			}
+		}
+		
+		let fotoProduk = fotoProdukArray.length > 0 ? JSON.stringify(fotoProdukArray) : null;
+
 		if (!id || !namaUsaha || !pemilik || !deskripsi) {
 			return fail(400, { error: 'Data tidak lengkap', action: 'edit' });
 		}
 
-		await db
+		try {
+			await db
 			.update(umkm)
-			.set({ namaUsaha, pemilik, deskripsi, kategori, gambarUrl, noWhatsapp, alamat, videoUrl })
-			.where(eq(umkm.id, id));
+			.set({ namaUsaha, pemilik, deskripsi, kategori, gambarUrl, noWhatsapp, alamat, mapsUrl, videoUrl, fotoProduk, linkInstagram, linkFacebook, linkTiktok, linkShopee })
+				.where(eq(umkm.id, id));
 
-		return { success: true, message: 'UMKM berhasil diperbarui!' };
+			return { success: true, message: 'UMKM berhasil diperbarui!' };
+		} catch (err: any) {
+			console.error('Error in edit action:', err);
+			return fail(500, { error: `Terjadi kesalahan saat memperbarui data: ${err.message}`, action: 'edit' });
+		}
 	},
 
 	hapus: async ({ request }) => {

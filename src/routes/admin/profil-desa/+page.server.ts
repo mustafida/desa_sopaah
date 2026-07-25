@@ -9,9 +9,12 @@ export const load: PageServerLoad = async () => {
 	const data = await db
 		.select()
 		.from(pengaturan)
-		.where(inArray(pengaturan.kunci, ['visi_misi', 'kepala_desa', 'struktur_pemerintahan']));
+		.where(inArray(pengaturan.kunci, ['visi_misi', 'kepala_desa', 'struktur_pemerintahan', 'sambutan_kepala_desa', 'kontak_admin', 'sosial_media']));
 	let visiMisi = { visi: '', misi: [] };
 	let kepalaDesa = '';
+	let sambutanKepalaDesa = '';
+	let kontakAdmin = '6281234567890';
+	let sosialMedia = { instagram: '', facebook: '', youtube: '', tiktok: '' };
 	let struktur = {
 		sekdes: 'APRILIYANTO WAHYUDI',
 		kaurPerencanaan: 'LILIS SURYANI',
@@ -26,6 +29,7 @@ export const load: PageServerLoad = async () => {
 
 	data.forEach((row) => {
 		if (row.kunci === 'kepala_desa') kepalaDesa = row.nilai;
+		if (row.kunci === 'sambutan_kepala_desa') sambutanKepalaDesa = row.nilai;
 		if (row.kunci === 'visi_misi') {
 			try {
 				visiMisi = JSON.parse(row.nilai);
@@ -36,15 +40,22 @@ export const load: PageServerLoad = async () => {
 				struktur = { ...struktur, ...JSON.parse(row.nilai) };
 			} catch (e) {}
 		}
+		if (row.kunci === 'kontak_admin') kontakAdmin = row.nilai;
+		if (row.kunci === 'sosial_media') {
+			try {
+				sosialMedia = { ...sosialMedia, ...JSON.parse(row.nilai) };
+			} catch (e) {}
+		}
 	});
 
-	return { visiMisi, kepalaDesa, struktur };
+	return { visiMisi, kepalaDesa, sambutanKepalaDesa, struktur, kontakAdmin, sosialMedia };
 };
 
 export const actions: Actions = {
 	simpan: async ({ request }) => {
 		const formData = await request.formData();
 		const kepalaDesa = formData.get('kepalaDesa')?.toString().trim();
+		const sambutanKepalaDesa = formData.get('sambutanKepalaDesa')?.toString().trim();
 		const visi = formData.get('visi')?.toString().trim();
 		const misiStr = formData.get('misi')?.toString().trim();
 
@@ -56,6 +67,11 @@ export const actions: Actions = {
 		const kasiPelayanan = formData.get('kasiPelayanan')?.toString().trim() || '';
 		const kasunBarat = formData.get('kasunBarat')?.toString().trim() || '';
 		const kasunTimur = formData.get('kasunTimur')?.toString().trim() || '';
+		const kontakAdmin = formData.get('kontakAdmin')?.toString().trim() || '6281234567890';
+		const sosmedInstagram = formData.get('sosmedInstagram')?.toString().trim() || '';
+		const sosmedFacebook = formData.get('sosmedFacebook')?.toString().trim() || '';
+		const sosmedYoutube = formData.get('sosmedYoutube')?.toString().trim() || '';
+		const sosmedTiktok = formData.get('sosmedTiktok')?.toString().trim() || '';
 
 		let fotoKepalaDesa = formData.get('existing_foto')?.toString() || '';
 		const fileUpload = formData.get('fotoKepalaDesa') as File | null;
@@ -103,6 +119,22 @@ export const actions: Actions = {
 			await db.insert(pengaturan).values({ kunci: 'kepala_desa', nilai: kepalaDesa });
 		}
 
+		// Sambutan
+		if (sambutanKepalaDesa !== undefined) {
+			const existingSambutan = await db
+				.select()
+				.from(pengaturan)
+				.where(eq(pengaturan.kunci, 'sambutan_kepala_desa'));
+			if (existingSambutan.length > 0) {
+				await db
+					.update(pengaturan)
+					.set({ nilai: sambutanKepalaDesa })
+					.where(eq(pengaturan.kunci, 'sambutan_kepala_desa'));
+			} else {
+				await db.insert(pengaturan).values({ kunci: 'sambutan_kepala_desa', nilai: sambutanKepalaDesa });
+			}
+		}
+
 		// Visi Misi
 		const existingVisi = await db
 			.select()
@@ -126,6 +158,29 @@ export const actions: Actions = {
 				.where(eq(pengaturan.kunci, 'struktur_pemerintahan'));
 		} else {
 			await db.insert(pengaturan).values({ kunci: 'struktur_pemerintahan', nilai: strukturVal });
+		}
+
+		// Kontak Admin
+		const existingKontak = await db
+			.select()
+			.from(pengaturan)
+			.where(eq(pengaturan.kunci, 'kontak_admin'));
+		if (existingKontak.length > 0) {
+			await db.update(pengaturan).set({ nilai: kontakAdmin }).where(eq(pengaturan.kunci, 'kontak_admin'));
+		} else {
+			await db.insert(pengaturan).values({ kunci: 'kontak_admin', nilai: kontakAdmin });
+		}
+
+		// Sosial Media
+		const sosialMediaVal = JSON.stringify({ instagram: sosmedInstagram, facebook: sosmedFacebook, youtube: sosmedYoutube, tiktok: sosmedTiktok });
+		const existingSosmed = await db
+			.select()
+			.from(pengaturan)
+			.where(eq(pengaturan.kunci, 'sosial_media'));
+		if (existingSosmed.length > 0) {
+			await db.update(pengaturan).set({ nilai: sosialMediaVal }).where(eq(pengaturan.kunci, 'sosial_media'));
+		} else {
+			await db.insert(pengaturan).values({ kunci: 'sosial_media', nilai: sosialMediaVal });
 		}
 
 		return { success: true, message: 'Profil Desa dan Struktur Pemerintahan berhasil diperbarui!' };

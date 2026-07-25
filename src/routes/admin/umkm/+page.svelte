@@ -7,11 +7,18 @@
 	let showForm = $state(false);
 	let editingItem = $state<any>(null);
 	let deleteConfirmId = $state<number | null>(null);
+	let existingPhotos = $state<string[]>([]);
+	let isLoading = $state(false);
+	let additionalPhotoInputs = $state<number[]>([0]);
+	let nextPhotoInputId = $state(1);
 
 	$effect(() => {
 		if ($page.url.searchParams.get('tambah') === 'true') {
 			showForm = true;
 			editingItem = null;
+			existingPhotos = [];
+			additionalPhotoInputs = [0];
+			nextPhotoInputId = 1;
 		}
 	});
 
@@ -20,17 +27,26 @@
 			showForm = false;
 			editingItem = null;
 			deleteConfirmId = null;
+			existingPhotos = [];
+			additionalPhotoInputs = [0];
+			nextPhotoInputId = 1;
 		}
 	});
 
 	function openEdit(item: any) {
 		editingItem = { ...item };
+		existingPhotos = item.fotoProduk ? JSON.parse(item.fotoProduk) : [];
+		additionalPhotoInputs = [0];
+		nextPhotoInputId = 1;
 		showForm = true;
 	}
 
 	function closeForm() {
 		showForm = false;
 		editingItem = null;
+		existingPhotos = [];
+		additionalPhotoInputs = [0];
+		nextPhotoInputId = 1;
 	}
 
 	const kategoriOptions = [
@@ -130,7 +146,13 @@
 				<form
 					method="POST"
 					action={editingItem ? '?/edit' : '?/tambah'}
-					use:enhance
+					use:enhance={() => {
+						isLoading = true;
+						return async ({ update }) => {
+							await update();
+							isLoading = false;
+						};
+					}}
 					enctype="multipart/form-data"
 					class="p-6 space-y-5"
 				>
@@ -228,6 +250,75 @@
 					</div>
 
 					<div>
+						<label for="maps_url" class="block text-sm font-medium text-slate-700 mb-1.5"
+							>Link Google Maps (Opsional)</label
+						>
+						<input
+							type="url"
+							id="maps_url"
+							name="maps_url"
+							value={editingItem?.mapsUrl ?? ''}
+							class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all text-slate-800"
+							placeholder="https://maps.app.goo.gl/..."
+						/>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+						<div>
+							<label for="link_instagram" class="block text-sm font-medium text-slate-700 mb-1.5"
+								>Link Instagram (Opsional)</label
+							>
+							<input
+								type="url"
+								id="link_instagram"
+								name="link_instagram"
+								value={editingItem?.linkInstagram ?? ''}
+								class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all text-slate-800"
+								placeholder="https://instagram.com/..."
+							/>
+						</div>
+						<div>
+							<label for="link_facebook" class="block text-sm font-medium text-slate-700 mb-1.5"
+								>Link Facebook (Opsional)</label
+							>
+							<input
+								type="url"
+								id="link_facebook"
+								name="link_facebook"
+								value={editingItem?.linkFacebook ?? ''}
+								class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all text-slate-800"
+								placeholder="https://facebook.com/..."
+							/>
+						</div>
+						<div>
+							<label for="link_tiktok" class="block text-sm font-medium text-slate-700 mb-1.5"
+								>Link TikTok (Opsional)</label
+							>
+							<input
+								type="url"
+								id="link_tiktok"
+								name="link_tiktok"
+								value={editingItem?.linkTiktok ?? ''}
+								class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all text-slate-800"
+								placeholder="https://tiktok.com/@..."
+							/>
+						</div>
+						<div>
+							<label for="link_shopee" class="block text-sm font-medium text-slate-700 mb-1.5"
+								>Link Shopee/Toko (Opsional)</label
+							>
+							<input
+								type="url"
+								id="link_shopee"
+								name="link_shopee"
+								value={editingItem?.linkShopee ?? ''}
+								class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all text-slate-800"
+								placeholder="https://shopee.co.id/..."
+							/>
+						</div>
+					</div>
+
+					<div>
 						<label for="video" class="block text-sm font-medium text-slate-700 mb-1.5"
 							>Video Dokumenter KKN</label
 						>
@@ -280,17 +371,88 @@
 						/>
 					</div>
 
+					<div>
+						<label class="block text-sm font-medium text-slate-700 mb-1.5"
+							>Galeri Foto Produk</label
+						>
+						{#if existingPhotos.length > 0}
+							{#each existingPhotos as foto}
+								<input type="hidden" name="kept_foto_produk" value={foto} />
+							{/each}
+							<div class="mb-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+								{#each existingPhotos as foto, idx}
+									<div class="relative group">
+										<img
+											src={foto}
+											alt="Produk"
+											class="w-full h-20 object-cover rounded border border-slate-200"
+										/>
+										<button
+											type="button"
+											onclick={() => { existingPhotos = existingPhotos.filter((_, i) => i !== idx) }}
+											class="absolute top-1 right-1 bg-red-600/90 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold hover:bg-red-700 transition-colors shadow-sm"
+										>
+											×
+										</button>
+									</div>
+								{/each}
+							</div>
+							<p class="text-xs text-slate-500 font-medium mb-3">Foto lama yang masih tampil di atas akan tetap dipertahankan. Anda bisa menyilang (x) jika ingin menghapusnya.</p>
+						{/if}
+						<div class="space-y-3">
+							{#each additionalPhotoInputs as inputId (inputId)}
+								<div class="flex items-center gap-2">
+									<input
+										type="file"
+										name="foto_produk"
+										accept="image/*"
+										class="flex-1 text-sm text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition-all cursor-pointer"
+									/>
+									{#if additionalPhotoInputs.length > 1}
+										<button
+											type="button"
+											onclick={() => { additionalPhotoInputs = additionalPhotoInputs.filter(id => id !== inputId) }}
+											class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors font-medium"
+											aria-label="Hapus Input"
+										>
+											<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+										</button>
+									{/if}
+								</div>
+							{/each}
+							
+							<button
+								type="button"
+								onclick={() => { additionalPhotoInputs = [...additionalPhotoInputs, nextPhotoInputId++] }}
+								class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded-xl transition-colors mt-2"
+							>
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+								Tambah Foto Katalog Lagi
+							</button>
+							<p class="text-xs text-slate-500 font-medium">Bisa tambahkan kotak upload sebanyak yang Anda butuhkan (unlimited).</p>
+						</div>
+
 					<div class="flex gap-3 pt-2">
 						<button
 							type="submit"
-							class="flex-1 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors"
+							disabled={isLoading}
+							class="flex-1 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
 						>
-							{editingItem ? 'Simpan Perubahan' : 'Tambah UMKM'}
+							{#if isLoading}
+								<svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								Menyimpan...
+							{:else}
+								{editingItem ? 'Simpan Perubahan' : 'Tambah UMKM'}
+							{/if}
 						</button>
 						<button
 							type="button"
 							onclick={closeForm}
-							class="px-6 py-2.5 bg-slate-100 text-slate-600 font-medium rounded-xl hover:bg-slate-200 transition-colors"
+							disabled={isLoading}
+							class="px-6 py-2.5 bg-slate-100 text-slate-600 font-medium rounded-xl hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							Batal
 						</button>

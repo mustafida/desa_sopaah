@@ -177,4 +177,23 @@
 			</div>
 		{/if}
 	</div>
+
+	<!-- Peta Administrasi -->
+	<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-8">
+		<div class="px-6 py-4 border-b border-slate-100">
+			<h2 class="font-bold text-slate-800">Peta Administrasi Desa Sopaah</h2>
+			<p class="text-sm text-slate-500 mt-1">Klik gambar di bawah ini untuk melihat peta dalam ukuran penuh (agar QR Code dapat di-scan dengan jelas).</p>
+		</div>
+		<div class="p-6">
+			<a href="/img/peta-desa-sopaah.jpg" target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded-xl border border-slate-200 hover:shadow-lg transition-all group">
+				<img src="/img/peta-desa-sopaah.jpg" alt="Peta Administrasi Desa Sopaah" class="w-full h-auto object-contain transform group-hover:scale-[1.01] transition-transform duration-300" />
+				<div class="bg-slate-50 p-3 text-center border-t border-slate-200">
+					<span class="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+						Buka Gambar Penuh
+					</span>
+				</div>
+			</a>
+		</div>
+	</div>
 </div>
