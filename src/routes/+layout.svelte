@@ -236,6 +236,7 @@
 						<li>
 							<a
 								href="/"
+								onclick={() => isMenuOpen = false}
 								class="block py-2 transition-colors {$page.url.pathname === '/'
 									? 'text-white underline underline-offset-4 decoration-2'
 									: 'text-green-100 hover:text-white'}">Beranda</a
@@ -244,6 +245,7 @@
 						<li>
 							<a
 								href="/profil"
+								onclick={() => isMenuOpen = false}
 								class="block py-2 transition-colors {$page.url.pathname === '/profil'
 									? 'text-white underline underline-offset-4 decoration-2'
 									: 'text-green-100 hover:text-white'}">Profil Desa</a
@@ -252,6 +254,7 @@
 						<li>
 							<a
 								href="/data-desa"
+								onclick={() => isMenuOpen = false}
 								class="block py-2 transition-colors {$page.url.pathname === '/data-desa'
 									? 'text-white underline underline-offset-4 decoration-2'
 									: 'text-green-100 hover:text-white'}">Data Desa</a
@@ -261,8 +264,8 @@
 						<li class="border-t border-green-700/50 pt-2">
 							<div class="py-2 text-white font-extrabold text-sm uppercase tracking-wider">Lembaga</div>
 							<ul class="pl-4 space-y-3 mt-1 font-medium text-green-100">
-								<li><a href="/lembaga/pkk" class="block hover:text-white transition-colors">PKK</a></li>
-								<li><a href="/lembaga/tk-pkk" class="block hover:text-white transition-colors">TK PKK</a></li>
+								<li><a href="/lembaga/pkk" onclick={() => isMenuOpen = false} class="block hover:text-white transition-colors">PKK</a></li>
+								<li><a href="/lembaga/tk-pkk" onclick={() => isMenuOpen = false} class="block hover:text-white transition-colors">TK PKK</a></li>
 							</ul>
 						</li>
 
@@ -270,17 +273,18 @@
 							<div class="py-2 text-white font-extrabold text-sm uppercase tracking-wider">Informasi</div>
 							<ul class="pl-4 space-y-3 mt-1 font-medium text-green-100">
 								<li>
-									<a href="/informasi/berita" class="block hover:text-white transition-colors"
+									<a href="/informasi/berita" onclick={() => isMenuOpen = false} class="block hover:text-white transition-colors"
 										>Berita & Pengumuman</a
 									>
 								</li>
-								<li><a href="/informasi/umkm" class="block hover:text-white transition-colors">UMKM</a></li>
+								<li><a href="/informasi/umkm" onclick={() => isMenuOpen = false} class="block hover:text-white transition-colors">UMKM</a></li>
 							</ul>
 						</li>
 
 						<li class="pt-4">
 							<a
 								href="/layanan-surat"
+								onclick={() => isMenuOpen = false}
 								class="block py-3 mt-2 bg-green-700 text-white text-center rounded-xl hover:bg-green-600 transition-all font-extrabold shadow-md border border-green-600"
 								>Layanan Surat</a
 							>

@@ -19,10 +19,10 @@
 	<div class="container mx-auto px-4 max-w-6xl">
 		<!-- Header -->
 		<div class="text-center mb-16">
-			<h1 class="text-4xl font-bold text-gray-800 mb-4">Data & Transparansi Desa Sopaah</h1>
+			<h1 class="text-4xl font-bold text-gray-800 mb-4">Data Desa Sopaah</h1>
 			<div class="w-24 h-1 bg-green-600 mx-auto rounded-full mb-6"></div>
 			<p class="text-gray-600 text-lg max-w-2xl mx-auto">
-				Informasi statistik kependudukan, demografi sosial, dan transparansi anggaran desa untuk
+				Informasi statistik kependudukan dan demografi sosial untuk
 				mewujudkan tata kelola pemerintahan yang terbuka.
 			</p>
 		</div>
